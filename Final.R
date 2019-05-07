@@ -25,6 +25,44 @@ for(i in length(Q)){
 HomeH <- which(M$Hometown == "Houston, TX "); HomeH #Houston, TX has 123
 HomeLA <- which(M$Hometown == "Los Angeles, CA"); HomeLA #Los Angeles, CA has 1,232
 
+#REQUIRED ANALYSIS 3. Hometown analysis WITH A CONTINGENCY TABLE
+#Is having a hometown that isn't Los Angeles correlated with being a Convert from another/no religion?
+#In theory, it could make sense because people who moved from further away towns might have joined the church in search of community, then converted religions
+#While people originally from LA already had a community from growing up there; or another factor could dominate
+
+#First, let's find out the number of people from LA and the number of converts
+HomeLA <- which(M$Hometown == "Los Angeles, CA"); HomeLA #People with hometowns LA
+length(HomeLA) #Los Angeles, CA has 1,232
+HomeNotLA <- which(M$Hometown != "Los Angeles, CA"); HomeNotLA #All people who were not from LA 
+length(HomeNotLA) #Not LA has 1,821
+ConvertsA <-which(M$Former.Church == "Convert"); ConvertsA #All the converts
+length(Converts) #427 converts
+NotConverts <-which(M$Former.Church != "Convert"); NotConverts #All the non-converts
+length(NotConverts) #2,626 non-converts
+
+#Second, let's make some logical columns
+LA <- M$Hometown == "Los Angeles, CA"
+Converts <- M$Former.Church == "Convert"
+HomeR <- data.frame(LA, Converts) #make a dataframe with just the logical columns
+
+#Now let's build a contingency table
+tbl <- table(HomeR$LA,HomeR$Converts); tbl
+#Looking at the table, there are 1818 who are not originally from LA and aren't converts; 3 who are not originally from LA and are converts; 808 originally from LA who are not converts, and 424 originally from LA who are converts
+
+#Now let's compare this with what the table would look like if Hometown and Convert status were independent
+tbl #our actual table
+Expected <- outer(rowSums(tbl), colSums(tbl))/sum(tbl); Expected #evidently, the tables are pretty different!!
+
+#These tables look quite different. Is the difference significant? Let's use the chi-squared test and see.
+chisq.test(HomeR$LA,HomeR$Converts)
+#The p-value is incredibly tiny and the odds this arose by chance is less than 1 in a quadrillion; since the p-value is far less than 0.05 we reject the null hypothesis
+#Therefore, having a Hometown of LA is very correlated with being a Convert to Christianity
+#It appears that having a hometown that isn't LA is very correlated against being a Convert to Christianity
+#In other words, almost everyone who joined the People's Independent Church of Christ who was not originally from LA was already a Christian; but according to the table roughly 1/3 of people with hometown LA were Converts to Christianity—a very, very interesting finding!! 
+
+#END REQUIRED ANALYSIS 3
+
+
 # Ben's work
 
 # Let's talk churches. It looks like there are 759 unique churches listed here:
