@@ -92,10 +92,13 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #It appears that having a hometown that isn't LA is very correlated against being a Convert to Christianity
 #In other words, almost everyone who joined the People's Independent Church of Christ who was not originally from LA was already a Christian; but according to the table roughly 1/3 of people with hometown LA were Converts to Christianity—a very, very interesting finding!! 
 #Not quite sure why this is, but perhaps the Church was very appealing to people who were already Christians moving in from out of state
+#It makes sense that most migrants traveling west would be churched folk because that kind of migration was based on social networks and their faith sustained them during the journey. that's one hypothesis
+#Quote from Proctor on significance of this: It tells me that the church was able to pull in people from LA with no religious affiliation at a time (WWII) when people were looking for resources and help.  The church was taken over by the second pastor (Clayton Russell) at this point.  He was the first black preaching radio broadcaster on the West Coast and lived a celebrity lifestyle.  So I know that the church was a big draw for migrants and local Angelenos.   But the fact that non churched people in LA were joining at such a high rate proves larger claims about the church’s significance.
 
 #Earning Bonus Point 8
 #This relationship between having a hometown of Los Angeles and being a Convert to Christianity was not apparent at all—my hypothesis at the beginning was totally wrong. But evidently, this relationship is very strong considering 424 of the 427 converts were from LA despite the fact that 1,821 of the 3,053 church members had a non-LA hometown.
 #Therefore, this is a convincing relationship that might not have looked statistically significant but turns out to be so.
+
 
 #END REQUIRED ANALYSIS 3 AND BONUS POINT 8
 #END SECTION 1
