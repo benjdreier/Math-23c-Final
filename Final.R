@@ -5,22 +5,30 @@
 #PLEASE DO NOT DISTRIBUTE THIS DATASET—MY PROCTOR PLANS TO PUBLISH THIS IN A BOOK AND DOES NOT WANT THIS DATA RELEASED PUBLICLY
 #Have a great summer! =)
 
+#Master outline/grading checklist
 
 #DOES THE DATASET MEET THE REQUIRED DATASET STANDARDS??
 #1- dataframe: yes, we have a .csv file with columns and rows
 #2- 
+#3- 
+#4-
 
 
 #DOES THE DATASET MEET THE REQUIRED GRAPHICAL DISPLAY STANDARDS?
-#1
+#1- 
+#2- 
+#3- 
 #4- yes, see contingency table in section 1
 
 #DOES THE DATASET MEET THE REQUIRED ANALYSIS STANDARDS?
+#1- 
+#2- 
 #3- yes, see contingency table in section 1
+#4- 
 
-
-##BONUS POINT 22: Ben and Michael are two people; the team has exactly two members! =)
-
+#WHAT BONUS POINTS HAVE WE ACHIEVED?
+#8- yes, see Section 1
+#22- Ben and Michael are two people; the team has exactly two members! =)
 
 #Note that this is organized by section. 
 
