@@ -25,6 +25,7 @@ for(i in length(Q)){
 HomeH <- which(M$Hometown == "Houston, TX "); HomeH #Houston, TX has 123
 HomeLA <- which(M$Hometown == "Los Angeles, CA"); HomeLA #Los Angeles, CA has 1,232
 
+
 #REQUIRED ANALYSIS 3. Hometown analysis WITH A CONTINGENCY TABLE
 #Is having a hometown that isn't Los Angeles correlated with being a Convert from another/no religion?
 #In theory, it could make sense because people who moved from further away towns might have joined the church in search of community, then converted religions
@@ -55,12 +56,14 @@ Expected <- outer(rowSums(tbl), colSums(tbl))/sum(tbl); Expected #evidently, the
 
 #These tables look quite different. Is the difference significant? Let's use the chi-squared test and see.
 chisq.test(HomeR$LA,HomeR$Converts)
-#The p-value is incredibly tiny and the odds this arose by chance is less than 1 in a quadrillion; since the p-value is far less than 0.05 we reject the null hypothesis
+#The p-value is incredibly tiny, at below 2.2 * 10^-16, and the odds this arose by chance is less than 1 in a quadrillion; since the p-value is far less than 0.05 we reject the null hypothesis
 #Therefore, having a Hometown of LA is very correlated with being a Convert to Christianity
 #It appears that having a hometown that isn't LA is very correlated against being a Convert to Christianity
 #In other words, almost everyone who joined the People's Independent Church of Christ who was not originally from LA was already a Christian; but according to the table roughly 1/3 of people with hometown LA were Converts to Christianity—a very, very interesting finding!! 
+#Not quite sure why this is, but perhaps the Church was very appealing to people who were already Christians moving in from out of state
 
 #END REQUIRED ANALYSIS 3
+
 
 
 # Ben's work
