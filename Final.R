@@ -104,7 +104,12 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #END REQUIRED ANALYSIS 3 AND BONUS POINT 8
 #END SECTION 1
 
+# This file contains cities tat were unable to be found by the location API
+# Most of these are just due to typos in the dataset
+# For now, we are removing the typoed cities entirely
+Invalids <- read.csv("Invalid Cities.txt")
 
+ValidHometowns <- M$Hometown[which(M$Hometown %in% Invalids$Function.City..KS)]
 
 
 
