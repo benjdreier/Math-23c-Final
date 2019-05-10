@@ -4,10 +4,9 @@ import csv
 destination = "Los Angeles"
 towns = set()
 
-with open("MembershipRollsSmall.csv", "rU") as rolls:
+with open("MembershipRolls.csv", "rU") as rolls:
     r = csv.reader(rolls)
     for row in r:
-        print(row)
         towns.add(row[5])
 
 print(len(towns), "uniqe towns")
@@ -21,8 +20,8 @@ for hometown in towns:
         print("Invalid town: ", hometown)
     hometown_dict[hometown] = dist
 
-with open("MembershipRollsSmall.csv", "w") as rolls:
-    with open("output.csv", "w") as output:
+with open("MembershipRolls.csv", "r") as rolls:
+    with open("MembershipWithDistance.csv", "w") as output:
         r = csv.reader(rolls)
         wr = csv.writer(output)
         
@@ -32,7 +31,7 @@ with open("MembershipRollsSmall.csv", "w") as rolls:
         all.append(header)
         print(header)
         for row in r:
-            town_name = r[5]
+            town_name = row[5]
             row.append(hometown_dict[town_name])
             all.append(row)
-        writer.writerows(all)
+        wr.writerows(all)
