@@ -27,7 +27,8 @@
 #4- 
 
 #WHAT BONUS POINTS HAVE WE ACHIEVED?
-#8- yes, see Section 1
+#3- See one-page document on ethical issues related to collection of data in attached files.
+#8- See Section 1 for convincing demonstration of a relationship that might not have been statistically significant but turns out to be so
 #22- Ben and Michael are two people; the team has exactly two members! =)
 
 #Note that this is organized by section. 
