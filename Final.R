@@ -110,18 +110,22 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #END REQUIRED ANALYSIS 3 AND BONUS POINT 8
 #END SECTION 1
 
+
 #SECTION 2: Comparing distances for converts and non-converts
 #BONUS POINT 20, 8 (done again)
 #After conducting a contingency table analysis of the differences between converts and non-converts, let's figure out whether this difference is reality using standard deviations and confidence intervals
 #Let's look at the mean distance migrated for the total population and compare the mean distance migrated for the Converts, and see if this is a statistically significant difference
-mu <- mean(M$Distance); mu #mean distance migrated from hometown for full population is 1306.80 km. Remember that someone whose hometown was LA who still lives in LA counts as zero!
-sigma <- sd(M$Distance); sigma #standard deviation 1717.98 km
-migD <- sum(M$Distance * (M$Former.Church == "Convert"))/sum((M$Former.Church == "Convert")); migD #mean distance migrated for Converts is 6.36 km
-#How likely is it that this arose by chance?
+km <- M$Distance/1000; km #convert our distances from meters to km
+
+mu <- mean(km); mu #mean distance migrated from hometown for full population is 1580.57 km. Remember that someone whose hometown was LA who still lives in LA counts as zero!
+sigma <- sd(km); sigma #standard deviation 1513.49 km
+migD <- sum(km * (M$Former.Church == "Convert"))/sum((M$Former.Church == "Convert")); migD #mean distance migrated for Converts is 7.26 km
+#How likely is it that the discrepancy between mean distance migrated for Converts and the full population arose by chance?
 
 #Approach #1 
 #The CLT says that if we draw a sample of size n from the total population,
-#the mean will be 1306.80 km, the SD will be sigma/sqrt(n), the distribution normal
+#the mean will be 1580.57 km, the SD will be sigma/sqrt(n), the distribution normal
+n = 25 #draw samples of size 25
 curve(dnorm(x, mu, sigma/sqrt(n)), from = 0, to = 2500)
 abline(v = migD, col = "red")     #our mean distance for converts looks good, it's on the far left tail
 pnorm(migD, mu, sigma/sqrt(n), lower.tail = FALSE) #and notice that an average distance greater than ours should arise roughly 100% of the time
@@ -144,7 +148,7 @@ PValue <- pnorm(Z, lower.tail = FALSE); PValue   #same result, the probability o
 #Alternatively, we can assume that we do not know the LA-side wigma
 #If we use our sample standard deviation S, we create a t statistic.
 #Studentize the data, using S instead of the national sigma.
-S <- sd(M$Distance); S
+S <- sd(km); S
 t = (migD-mu)/(S/sqrt(n)); t 
 PValue <- pt(t, df = n-1, lower.tail = FALSE); PValue
 #the p-value is pretty much the same at p = 1; it's virtually certain that if you generated random sample means you'd get a higher mean than our actual mean for Converts
@@ -153,17 +157,17 @@ abline(v = migD, col = "red")     #our mean score looks really good
 
 #For n this large, the t distribution is essentially standard normal
 t = (migD-mu)/(sigma/sqrt(n)); t 
-PValue <- pt(t, df = n-1, lower.tail = FALSE); PValue #same as earlier result
+PValue <- pt(t, df = n-1, lower.tail = FALSE); PValue #about the same P-value as earlier result
 
 #BONUS POINT 20: I calculated a confidence interval here!
 
-#notice that the lower end of the confidence interval is 1106.493
-L <- mean(M$Distance) + qt(0.025, n-1) * sd(M$Distance)/sqrt(n); L
-#and the higher end of the confidence interval is 1507.108
-H <- mean(M$Distance) - qt(0.025, n-1) * sd(M$Distance)/sqrt(n); H
+#notice that the lower end of the confidence interval is 955.83
+L <- mean(km) + qt(0.025, n-1) * sd(km)/sqrt(n); L
+#and the higher end of the confidence interval is 2205.31
+H <- mean(km) - qt(0.025, n-1) * sd(km)/sqrt(n); H
 
-#So if the distance migrated from one's hometown followed a normal distribution, then the 95% confidence interval for the distance migrated would be [1106.493,1507.108]
-#But because actual distance migrated from one's hometown for Converts to Christianity is just 6.36km, FAR outside the actual confidence interval, we know that this probably did not arise by chance
+#So if the distance migrated from one's hometown followed a normal distribution, then the 95% confidence interval for the distance migrated would be [955.83,2205.31]
+#But because actual distance migrated from one's hometown for Converts to Christianity is just 7.26, FAR outside the actual confidence interval, we know that this probably did not arise by chance
 #In other words, I have shown more quantiatively than Section 1 that Converts are likely to have migrated a much lower distance, and that this difference is statistically significant.
 
 #BONUS POINT 8: Again, this shows the same relationship as in Section 1 and how it did not arise randomly. The statistical difference the mean distance traveled for Converts and the mean distance traveled for all people at this Church is clear
@@ -171,12 +175,8 @@ H <- mean(M$Distance) - qt(0.025, n-1) * sd(M$Distance)/sqrt(n); H
 #END SECTION 2
 
 
-# This file contains cities tat were unable to be found by the location API
-# Most of these are just due to typos in the dataset
-# For now, we are removing the typoed cities entirely
-Invalids <- read.csv("Invalid Cities.txt")
 
-ValidHometowns <- M$Hometown[which(M$Hometown %in% Invalids$Function.City..KS)]
+
 
 
 
