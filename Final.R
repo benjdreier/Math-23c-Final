@@ -14,7 +14,7 @@
 #4-yes, there are over 3000 rows representing over 3000 church members
 
 #DOES THE DATASET MEET THE REQUIRED GRAPHICAL DISPLAY STANDARDS?
-#1- 
+#1- yes, see section 5 for bar plot
 #2- yes, see section 2 for histograms (also in other places)
 #3- 
 #4- yes, see contingency table in section 1
@@ -26,9 +26,10 @@
 #4- yes, see section 2 for a comparison
 
 #WHAT BONUS POINTS HAVE WE ACHIEVED?
+#2- Yes, our dataset has over 3000 individuals, a very large dataset. If you look in Section 2, we actually take samples from the population there.
 #3- See one-page document on ethical issues related to collection of data in attached files.
 #8- See Section 1 for convincing demonstration of a relationship that might not have been statistically significant but turns out to be so, also in Section 2
-#9- See Section 4; this may have been statistically significant but in fact is not
+#9- See Section 4 or 5; state population may have been statistically significant but in fact does not seem to correlate with anything
 #12- See Section 2 for a permutation test that works better than classical methods
 #14- See Section 4 for a use of linear regression
 #15- See Section 4 for calculation and display of a logistic regression curve
@@ -37,6 +38,7 @@
 #22- Ben and Michael are two people; the team has exactly two members! =)
 
 #Note that this is organized by section. 
+#Also, section 5 has some of the most interesting analysis because it compares statistics by church denomination. highly suggest you go there! :)
 
 #SECTION 0: LOADING THE DATA FILE AND BASIC ANALYSIS
 #install.packages("ggplot2") Make sure to install ggplot2 once
@@ -44,6 +46,7 @@ library("ggplot2")
 
 #First, let's load the data file. Let M be the data file.
 M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file was edited to add two numeric columns using a Python script since the original file did not have any numeric columns and was simply a list of members
+#BONUS POINT 2: notice that our dataset has over 3,000 individuals. This is definitely a data set so large it can be used as a population from which samples are taken, see section 2 for actual samples from the population
 #Ben wrote a python script, distancegetter.py, that gets the distance of each hometown from LA (aka how far an individual moved to LA) and their home state's population
 
 #Note: since certain individuals' Hometowns did not have data associated with them, those individuals have been deleted for the sake of this analysis. 
@@ -98,7 +101,7 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #END SECTION 1
 
 #SECTION 2: Comparing distances for converts and non-converts with CLT, permutation tests
-#BONUS POINT 12, 20, 8 (done again)
+#BONUS POINTS 2, 12, 20, 8 (done again)
 #REQUIRED ANALYSIS 1,3
 #After conducting a contingency table analysis of the differences between converts and non-converts, let's figure out whether this difference is reality using standard deviations and confidence intervals
 #Let's look at the mean distance migrated for the total population and compare the mean distance migrated for the Converts, and see if this is a statistically significant difference
@@ -116,6 +119,7 @@ n = 25 #draw samples of size 25
 curve(dnorm(x, mu, sigma/sqrt(n)), from = 0, to = 2500)
 abline(v = migD, col = "red")     #our mean distance for converts looks good, it's on the far left tail
 pnorm(migD, mu, sigma/sqrt(n), lower.tail = FALSE) #and notice that an average distance greater than ours should arise roughly 100% of the time
+#BONUS POINT 2: notice how we drew samples from the total population here! This was possible because of how large our dataset is, with over 3000 entries
 
 #Here is a way to shade some of the area
 xpoints <- c(migD,seq(migD,2500,1),2500) #define polygon to shade
@@ -284,6 +288,96 @@ curve( exp(results@coef[1]+results@coef[2]*x)/ (1+exp(results@coef[1]+results@co
 #BONUS POINT 9! Evidently, there could have been a relationship between state population and distance traveled, but our analysis indicates that there is likely no significant relationship after all. Therefore, this relationship turns out to be statistically insignificant.
 
 #END SECTION 4
+
+#SECTION 5: Distances traveled and population of state by church denomination
+#another example of bonus point 9
+#Continuing from Section 3, let's analyze the average distances traveled for all major church denominations
+
+#the following code creates a column that is True if an individual was a certain denomination before joining the People's Independent Church of Christ, false otherwise (defined as their church having a certain word in it)
+Churches <- (M$Former.Church); Churches #column of all individuals churches
+Denoms <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic") # Enumerate some words pointing to church denomination
+# Function to get which churches contain which denomination strings
+whichContain <- function(ch, dn){
+  denoms <- rep("", length(ch))
+  i <- 1
+  for(c in ch){
+    for(d in dn){
+      #Check if the church has the denomination
+      if( is.na(grepl(d, c)) ){break}
+      if( grepl(d, c) ){
+        denoms[i] = paste(denoms[i], d);
+      }
+    }
+    i <- i + 1
+  }
+  return(denoms)
+}
+WhichDenoms <- whichContain(Churches, Denoms)
+isBaptist <- WhichDenoms == " Baptist"; isBaptist #true if an individual is Baptist
+isMethodist <- WhichDenoms == " Methodist"; isMethodist
+isAME <- WhichDenoms == " AME"; isAME
+isEpiscopal <- WhichDenoms == " Episcopal"; isEpiscopal
+isCME <- WhichDenoms == " CME"; isCME
+isPresbyterian <- WhichDenoms == " Presbyterian"; isPresbyterian
+isCatholic <- WhichDenoms == " Catholic"; isCatholic
+
+numBap <- sum(isBaptist); numBap #so we have 1,185 baptists; out of 3,046 individuals this is a lot
+numMeth <- sum(isMethodist); numMeth #123 Methodists
+numAME <- sum(isAME); numAME #322 AMEs/ African Methodists
+numEp <- sum(isEpiscopal); numEp #41 Episcopals
+numCME <- sum(isCME); numCME #70 CMEs
+numPres <-sum(isPresbyterian); numPres #25 Presbyterians
+numCat <- sum(isCatholic); numCat #62 Catholics
+numC <- sum(M$Former.Church == "Convert"); numC #427 Converts (same method as Section 1)
+#So our algorithm accounts for 2,255 of the 3,046 individuals in our dataset. This is pretty good for just a word search!
+other <- 3046 - sum(numBap, numMeth, numAME, numEp, numCME, numPres, numCat, numC); other #791 other denominations
+
+#Let's make a vector of all the individuals' denominations and graph them
+des <- c(rep("Baptist", numBap), rep("Methodist", numMeth), rep("AME", numAME), rep("Episcopal", numEp), rep("CME", numCME), rep("Presbyterian", numPres), rep("Catholic", numCat), rep("Convert", numC), rep("Other", other)); des
+table(des) #look at our cute little table!
+barplot(table(des), col = "pink", xlab = "Denomination", ylab = "Number of Individuals", main = "Denominations of Church Membership") #note: you may need to resize your window to get all of the labels to show
+#THIS BARPLOT IS REQUIRED GRAPHICAL DISPLAY 1
+
+Converts <- M$Former.Church == "Convert"
+
+#Now let's look at average distance traveled by church denomination, remembering that 0 km = from LA
+disB <- sum(isBaptist * km)/sum(isBaptist); disB #2028.80 km for Baptists
+disM <- sum(isMethodist * km)/sum(isMethodist); disM #2581.766 km for Methodists
+disA <- sum(isAME * km)/sum(isAME); disA #2087.33 km for AME
+disE <- sum(isEpiscopal * km)/sum(isEpiscopal); disE #2234.66 km for Episcopal
+disCM <- sum(isCME * km)/sum(isCME); disCM #1894.95 km for CME
+disP <- sum(isPresbyterian * km)/sum(isPresbyterian); disP #2041.20 km for Presbyterians
+disCA <- sum(isCatholic * km)/sum(isCatholic); disCA #802.37 km for Catholics
+disC <- sum(Converts * km)/sum(Converts); disC #7.26 km for Converts
+disO <- sum((!isBaptist & !isMethodist & !isAME & !isEpiscopal & !isCME & !isPresbyterian & !isCatholic & !Converts) * km)/ sum((!isBaptist & !isMethodist & !isAME & !isEpiscopal & !isCME & !isPresbyterian & !isCatholic & !Converts)); disO #1381.13 km for others
+
+#Let's make a graph of the distances. For the purposes of making a barplot, I'm rounding the distances to the nearest whole number
+dis <- c(rep("Baptist", disB), rep("Methodist", disM), rep("AME", disA), rep("Episcopal", disE), rep("CME", disCM), rep("Presbyterian", disP), rep("Catholic", disCA), rep("Convert", disC), rep("Other", disO)); dis
+table(dis) #look at our cute little table!
+barplot(table(dis), col = "orange", xlab = "Denomination", ylab = "Average Distance Traveled to LA (km)", main = "Average Distance Traveled to LA (km) by Denomination") #note: you may need to resize your window to get all of the labels to show
+#We knew about Converts from Section 1, but notice how Catholics did not migrate very far either compared to the other denominations
+
+#Finally, let's look at average home state population by denomination
+pB <- sum(isBaptist * M$State.Population)/sum(isBaptist); pB #5476799 for Baptists
+pM <- sum(isMethodist * M$State.Population)/sum(isMethodist); pM #5072736 for Methodists
+pA <- sum(isAME * M$State.Population)/sum(isAME); pA #5060682 for AME
+pE <- sum(isEpiscopal * M$State.Population)/sum(isEpiscopal); pE #6310050 for Episcopal
+pCM <- sum(isCME * M$State.Population)/sum(isCME); pCM #5022214 for CME
+pP <- sum(isPresbyterian * M$State.Population)/sum(isPresbyterian); pP #4982980 for Presbyterians
+pCA <- sum(isCatholic * M$State.Population)/sum(isCatholic); pCA #68705221 for Catholics
+pC <- sum(Converts * M$State.Population)/sum(Converts); pC #6906233 for Converts
+pO <- sum((!isBaptist & !isMethodist & !isAME & !isEpiscopal & !isCME & !isPresbyterian & !isCatholic & !Converts) * M$State.Population)/ sum((!isBaptist & !isMethodist & !isAME & !isEpiscopal & !isCME & !isPresbyterian & !isCatholic & !Converts)); pO #6270838 for others
+
+#Let's make a graph of the average home state populations
+p <- c(rep("Baptist", pB), rep("Methodist", pM), rep("AME", pA), rep("Episcopal", pE), rep("CME", pCM), rep("Presbyterian", pP), rep("Catholic", pCA), rep("Convert", pC), rep("Other", pO)); p
+table(p) #look at our cute little table!
+barplot(table(p), col = "green", xlab = "Denomination", ylab = "Average Home State Population", main = "Average Home State Population by Denomination") #note: you may need to resize your window to get all of the labels to show
+#It doesn't look like there are many clear differences by denomination
+#BONUS POINT 9: here's another relationship that might have been statistically significant, but are not so
+
+#END SECTION 5
+
+
 
 
 # Ben's work
