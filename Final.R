@@ -34,6 +34,7 @@
 #14- See Section 4 for a use of linear regression
 #15- See Section 4 for calculation and display of a logistic regression curve
 #16- See Section 4 for an appropriate use of correlation
+#19- See Section 1 for pie charts
 #20- See Section 2 for calculation of a confidence interval
 #22- Ben and Michael are two people; the team has exactly two members! =)
 
@@ -54,7 +55,7 @@ M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file wa
 #Since these individuals represent less than 0.3% of the total number of individuals, which is over 3000, this should not meaningfully impact our data
 
 #SECTION 1: Hometown analysis WITH A CONTINGENCY TABLE
-#MEETS REQUIRED ANALYSIS 3 AND BONUS POINT 8.
+#MEETS REQUIRED ANALYSIS 3 AND BONUS POINTS 8, 19.
 #Is having a hometown that isn't Los Angeles correlated with being a Convert from another/no religion?
 #My hypothesis: In theory, it could make sense because people who moved from further away towns might have joined the church in search of community, then converted religions
 #While people originally from LA already had a community from growing up there; or another factor could dominate
@@ -97,7 +98,28 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #This relationship between having a hometown of Los Angeles and being a Convert to Christianity was not apparent at all—my hypothesis at the beginning was totally wrong. But evidently, this relationship is very strong considering 424 of the 427 converts were from LA despite the fact that 1,814 of the 3,046 church members had a non-LA hometown.
 #Therefore, this is a convincing relationship that might not have looked statistically significant but turns out to be so.
 
-#END REQUIRED ANALYSIS 3 AND BONUS POINT 8
+#BONUS POINT 19: Pie charts were not made in the class scripts, these charts are different  
+#Let's build pie charts to illustrate our data!
+
+# Pie Chart for Converts and Non-Converts
+slices <- c(427, 2619) 
+lbls <- c("Converts to Christianity", "Non-Converts")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Converts and Non-Converts at the Church")
+
+# Pie Chart for Converts and Non-Converts, separated by From/Not From LA
+slices <- c(424, 3, 808, 1811) 
+lbls <- c("Convert Locals", "Convert Migrants", "Non-Convert Locals", "Non-Convert Migrants")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Converts, Non-Converts, Migrants, and Locals at the Church")
+
+#END REQUIRED ANALYSIS 3 AND BONUS POINTS 8,11
 #END SECTION 1
 
 #SECTION 2: Comparing distances for converts and non-converts with CLT, permutation tests
@@ -337,6 +359,25 @@ des <- c(rep("Baptist", numBap), rep("Methodist", numMeth), rep("AME", numAME), 
 table(des) #look at our cute little table!
 barplot(table(des), col = "pink", xlab = "Denomination", ylab = "Number of Individuals", main = "Denominations of Church Membership") #note: you may need to resize your window to get all of the labels to show
 #THIS BARPLOT IS REQUIRED GRAPHICAL DISPLAY 1
+
+#(BONUS POINT 19 AGAIN): let's make a pie chart of the denominations! :)
+# Pie Chart for Denominations
+slices <- c(numBap, numMeth, numAME, numEp, numCME, numPres, numCat, numC, other) 
+lbls <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic", "Convert to Christianity", "Other")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Denominations at the Church")
+
+# Pie Chart for Converts and Non-Converts, separated by From/Not From LA
+slices <- c(424, 3, 808, 1811) 
+lbls <- c("Convert Locals", "Convert Migrants", "Non-Convert Locals", "Non-Convert Migrants")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Converts, Non-Converts, Migrants, and Locals at the Church")
 
 Converts <- M$Former.Church == "Convert"
 
