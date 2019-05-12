@@ -13,22 +13,26 @@
 #3- yes, we used a python script to add two numerical columns: 1st, distance of hometown from LA; 2nd, population of home state in 1940
 #4-yes, there are over 3000 rows representing over 3000 church members
 
-
 #DOES THE DATASET MEET THE REQUIRED GRAPHICAL DISPLAY STANDARDS?
 #1- 
-#2- 
+#2- yes, see section 2 for histograms (also in other places)
 #3- 
 #4- yes, see contingency table in section 1
 
 #DOES THE DATASET MEET THE REQUIRED ANALYSIS STANDARDS?
-#1- 
-#2- 
+#1- yes, see permutation test in sections 2, 3
+#2- yes, p-values are used throughout this project, including in sections 2 and 3
 #3- yes, see contingency table in section 1
-#4- 
+#4- yes, see section 2 for a comparison
 
 #WHAT BONUS POINTS HAVE WE ACHIEVED?
 #3- See one-page document on ethical issues related to collection of data in attached files.
 #8- See Section 1 for convincing demonstration of a relationship that might not have been statistically significant but turns out to be so, also in Section 2
+#9- See Section 4; this may have been statistically significant but in fact is not
+#12- See Section 2 for a permutation test that works better than classical methods
+#14- See Section 4 for a use of linear regression
+#15- See Section 4 for calculation and display of a logistic regression curve
+#16- See Section 4 for an appropriate use of correlation
 #20- See Section 2 for calculation of a confidence interval
 #22- Ben and Michael are two people; the team has exactly two members! =)
 
@@ -45,22 +49,6 @@ M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file wa
 #Note: since certain individuals' Hometowns did not have data associated with them, those individuals have been deleted for the sake of this analysis. 
 #Less than 0.3% of individuals were deleted; I deleted Ritta Penden, Susan Fleming, John Hunt, George H. Jones, Wilfred Wein, Coxdelia Marshall, and Melvin Johnson since their hometowns either did not exist or had no data according to the API
 #Since these individuals represent less than 0.3% of the total number of individuals, which is over 3000, this should not meaningfully impact our data
-#Now, let's figure out which people currently lived in Los Angelos and place them in the dataframe livesLA.
-
-livesLA <- which(M$City == "Los Angeles"); livesLA
-livesBH <- which(M$City == "Beverly Hills"); livesBH #Beverly Hills
-livesHW <- which(M$City == "Hollywood"); livesHW #Hollywood
-livesPD <- which(M$City == "Pasadena"); livesPD #Pasadena
-
-#Now let's categorize people's hometowns
-Q <- unique(M$Hometown); Q #this is the list of all unique hometowns, of which there are 394
-
-N <- length(Q) #394
-Home <- numeric(N); Home
-
-for(i in length(Q)){
-  Home[i] <- which(M$Hometown == Q[i])
-}
 
 #SECTION 1: Hometown analysis WITH A CONTINGENCY TABLE
 #MEETS REQUIRED ANALYSIS 3 AND BONUS POINT 8.
@@ -109,9 +97,9 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #END REQUIRED ANALYSIS 3 AND BONUS POINT 8
 #END SECTION 1
 
-
-#SECTION 2: Comparing distances for converts and non-converts
-#BONUS POINT 20, 8 (done again)
+#SECTION 2: Comparing distances for converts and non-converts with CLT, permutation tests
+#BONUS POINT 12, 20, 8 (done again)
+#REQUIRED ANALYSIS 1,3
 #After conducting a contingency table analysis of the differences between converts and non-converts, let's figure out whether this difference is reality using standard deviations and confidence intervals
 #Let's look at the mean distance migrated for the total population and compare the mean distance migrated for the Converts, and see if this is a statistically significant difference
 km <- M$Distance/1000; km #convert our distances from meters to km
@@ -171,15 +159,88 @@ H <- mean(km) - qt(0.025, n-1) * sd(km)/sqrt(n); H
 
 #BONUS POINT 8: Again, this shows the same relationship as in Section 1 and how it did not arise randomly. The statistical difference the mean distance traveled for Converts and the mean distance traveled for all people at this Church is clear
 
+#finally, let's try a permutation test
+#Now let's do a permutation test
+isConvert <- M$Former.Church == "Convert"; isConvert
+N <- 10000
+diffs <- numeric(N)
+for(i in 1:N){
+  Samp <- sample(isConvert); Samp #permuted isBaptist column
+  disConverts <- sum((km) * (Samp == TRUE))/sum(Samp == TRUE); disConverts
+  dOthers <- sum((km) * (Samp == FALSE))/sum(Samp == FALSE); dOthers
+  diffs[i] = disConverts - dOthers #as likely to be negative or positive
+}
+mean(diffs) #should be close to zero, this is indeed near zero
+hist(diffs, breaks = "FD", xlim = c(-2000,500)) #now display the observed difference on the histogram
+
+other <- sum(km * (M$Former.Church != "Convert"))/sum((M$Former.Church != "Convert")); other
+observed <- migD - other ; observed #observed difference between mean for Converts and non-Convert; this is -1829 km
+abline(v = observed, col = "red") #notice that the observed difference is very far off from the random simulations
+#what is the probability that a difference this large could have arisen with a random subset?
+pvalue <- (sum(diffs >= observed)+1)/(N+1); pvalue #notice that the p-value is about 1, so the probability of randomly exceeding the actual value is 100%; so it is extremely unlikely that this difference arose by chance
+#evidently, the difference between Converts and non-Converts probably did not arise randomly, as there is a 100% chance that a random simulation would have a difference of lesser magnitude than the actual difference seen
+#compared to the confidence interval analysis above, we actually have a concrete probability that this happened by chance and know more than just the fact that the actual result is outside the confidence interval 
+
+#BONUS POINT 12: This is an example of a permutation test working much better than classical methods. Using this permutation test, we have shown that the difference probably did not arise out of random chance and is statistically significant. But with classical methods like CLT/standard deviation, it is harder to know whether the difference happened randomly/not randomly. Therefore, this permutation test works better than classical methods in demonstrating the statistical significance of Baptists and distance traveled.
+#REQUIRED ANALYSIS 3: This is a clear comparison of a CLT analysis with a simulation, permutation test
 #END SECTION 2
 
+#SECTION 3: Permutation test with Baptists
+#Looking at the dataset, we have a lot of Baptists! Now I want to figure out whether being a Baptist is correlated at all with Distance Traveled using a Permutation test
 
+#the following code creates a column that is True if an individual was Baptist before joining the People's Independent Church of Christ, false otherwise (defined as their church having the word Baptist in it)
+Churches <- (M$Former.Church); Churches #column of all individuals churches
+Denoms <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic") # Enumerate some words pointing to church denomination
+# Function to get which churches contain which denomination strings
+whichContain <- function(ch, dn){
+  denoms <- rep("", length(ch))
+  i <- 1
+  for(c in ch){
+    for(d in dn){
+      #Check if the church has the denomination
+      if( is.na(grepl(d, c)) ){break}
+      if( grepl(d, c) ){
+        denoms[i] = paste(denoms[i], d);
+      }
+    }
+    i <- i + 1
+  }
+  return(denoms)
+}
+WhichDenoms <- whichContain(Churches, Denoms)
+isBaptist <- WhichDenoms == " Baptist"; isBaptist #true if an individual is Baptist
 
+sum(isBaptist) #so we have 1,185 baptists; out of 3,046 individuals this is a lot
 
+km <- M$Distance / 1000 #divide distance by 1000 to get distance in km
+mean(km) #mean distance for all Individuals is 1580.57 km
+median(km) #median distance for all Individuals is 2137 km
 
+#Calculate the observed Distance Traveled for Baptists and non-Baptists
+dBaptists <- sum((km) * (isBaptist == TRUE))/sum(isBaptist == TRUE); dBaptists #average distance for Baptists is 2028.802 km
+dOthers <- sum((km) * (isBaptist == FALSE))/sum(isBaptist == FALSE); dOthers #average distance for non-Baptists is 1295.159 km
+observed <- dBaptists - dOthers; observed #on average, Baptists traveled 733.64 km farther than non-Baptists
+ 
+#Now let's do a permutation test
+N <- 10000
+diffs <- numeric(N)
+for(i in 1:N){
+  Samp <- sample(isBaptist); Samp #permuted isBaptist column
+  dBaptists <- sum((km) * (Samp == TRUE))/sum(Samp == TRUE); dBaptists
+  dOthers <- sum((km) * (Samp == FALSE))/sum(Samp == FALSE)
+  diffs[i] = dBaptists - dOthers #as likely to be negative or positive
+}
+mean(diffs) #should be close to zero, this is indeed near zero
+hist(diffs, breaks = "FD", xlim = c(-500,900)) #now display the observed difference on the histogram
+abline(v = observed, col = "red") #notice that the observed difference is very far off from the random simulations
+#what is the probability that a difference this large could have arisen with a random subset?
+pvalue <- (sum(diffs >= observed)+1)/(N+1); pvalue #notice that the p-value is about 0.0001, which is far less than 0.05 (our typical threshold for signifiance). Therefore, the difference between Distance traveled for Baptists and non-Baptists is statistically significant. It is incredibly unlikely that it arose by chance.
+#for whatever reason, Baptists at the People's Independent Church migrated from further distances than non-Baptists, on aveage 733.64 km further. This difference did not occur by random chance.
+
+#END SECTION 3
 
 #SECTION 4: Is there a relationship between distance traveled and state population?
-#BONUS POINTS: 14, 15, 16
+#BONUS POINTS: 9, 14, 15, 16
 
 #Let's try to analyze our only two numeric columns, distance traveled and state population
 #Is there some kind of relationship between traveling from a farther away state and coming from a larger or smaller state?
@@ -220,8 +281,9 @@ results@coef #alpha = -0.158, beta = -1.725 are the parameters for our logistic 
 curve( exp(results@coef[1]+results@coef[2]*x)/ (1+exp(results@coef[1]+results@coef[2]*x)),col = "blue", add=TRUE) #the blue line is the logistic regression curve
 #The logistic regression curve does not look terrible, but considering how low our correlation was earlier it is unlikely that there is a substantial correlation between distance traveled and state population in 1940
 
-#END SECTION 4
+#BONUS POINT 9! Evidently, there could have been a relationship between state population and distance traveled, but our analysis indicates that there is likely no significant relationship after all. Therefore, this relationship turns out to be statistically insignificant.
 
+#END SECTION 4
 
 
 # Ben's work
