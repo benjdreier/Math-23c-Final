@@ -102,7 +102,7 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #Let's build pie charts to illustrate our data!
 
 # Pie Chart for Converts and Non-Converts
-slices <- c(427, 2619) 
+slices <- c(427, 2626) #notice that the numbers are slightly different since I added back the residents who were excluded earlier
 lbls <- c("Converts to Christianity", "Non-Converts")
 pct <-  round(slices/sum(slices)*100, 2) 
 lbls <- paste(lbls, slices, pct) # add percents to labels 
@@ -111,13 +111,23 @@ pie(slices,labels = lbls, col=rainbow(length(lbls)),
     main="Converts and Non-Converts at the Church")
 
 # Pie Chart for Converts and Non-Converts, separated by From/Not From LA
-slices <- c(424, 3, 808, 1811) 
+slices <- c(424, 3, 808, 1818) #notice that the numbers are slightly different since I added back the residents who were excluded earlier
 lbls <- c("Convert Locals", "Convert Migrants", "Non-Convert Locals", "Non-Convert Migrants")
 pct <-  round(slices/sum(slices)*100, 2) 
 lbls <- paste(lbls, slices, pct) # add percents to labels 
 lbls <- paste(lbls,"%",sep="") # ad % to labels 
 pie(slices,labels = lbls, col=rainbow(length(lbls)),
     main="Converts, Non-Converts, Migrants, and Locals at the Church")
+
+# Pie Chart for Locals and Migrants
+slices <- c(1232, 1821) #notice that the numbers are slightly different since I added back the residents who were excluded earlier 
+lbls <- c("Locals", "Migrants")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Locals and Migrants at the Church")
+
 
 #END REQUIRED ANALYSIS 3 AND BONUS POINTS 8,11
 #END SECTION 1
@@ -343,16 +353,17 @@ isCME <- WhichDenoms == " CME"; isCME
 isPresbyterian <- WhichDenoms == " Presbyterian"; isPresbyterian
 isCatholic <- WhichDenoms == " Catholic"; isCatholic
 
-numBap <- sum(isBaptist); numBap #so we have 1,185 baptists; out of 3,046 individuals this is a lot
+#Notice that I added the individuals who were deleted at the very beginning (since their hometowns couldn't be traced) back in for the purposes of counting as we have their former churches
+numBap <- sum(isBaptist) + 1; numBap #so we have 1,186 baptists; out of 3,046 individuals this is a lot
 numMeth <- sum(isMethodist); numMeth #123 Methodists
-numAME <- sum(isAME); numAME #322 AMEs/ African Methodists
-numEp <- sum(isEpiscopal); numEp #41 Episcopals
+numAME <- sum(isAME)+2; numAME #324 AMEs/ African Methodists
+numEp <- sum(isEpiscopal)+2; numEp #43 Episcopals
 numCME <- sum(isCME); numCME #70 CMEs
 numPres <-sum(isPresbyterian); numPres #25 Presbyterians
 numCat <- sum(isCatholic); numCat #62 Catholics
 numC <- sum(M$Former.Church == "Convert"); numC #427 Converts (same method as Section 1)
 #So our algorithm accounts for 2,255 of the 3,046 individuals in our dataset. This is pretty good for just a word search!
-other <- 3046 - sum(numBap, numMeth, numAME, numEp, numCME, numPres, numCat, numC); other #791 other denominations
+other <- 3046 - sum(numBap, numMeth, numAME, numEp, numCME, numPres, numCat, numC) +2; other #793 other denominations
 
 #Let's make a vector of all the individuals' denominations and graph them
 des <- c(rep("Baptist", numBap), rep("Methodist", numMeth), rep("AME", numAME), rep("Episcopal", numEp), rep("CME", numCME), rep("Presbyterian", numPres), rep("Catholic", numCat), rep("Convert", numC), rep("Other", other)); des
@@ -369,15 +380,6 @@ lbls <- paste(lbls, slices, pct) # add percents to labels
 lbls <- paste(lbls,"%",sep="") # ad % to labels 
 pie(slices,labels = lbls, col=rainbow(length(lbls)),
     main="Denominations at the Church")
-
-# Pie Chart for Converts and Non-Converts, separated by From/Not From LA
-slices <- c(424, 3, 808, 1811) 
-lbls <- c("Convert Locals", "Convert Migrants", "Non-Convert Locals", "Non-Convert Migrants")
-pct <-  round(slices/sum(slices)*100, 2) 
-lbls <- paste(lbls, slices, pct) # add percents to labels 
-lbls <- paste(lbls,"%",sep="") # ad % to labels 
-pie(slices,labels = lbls, col=rainbow(length(lbls)),
-    main="Converts, Non-Converts, Migrants, and Locals at the Church")
 
 Converts <- M$Former.Church == "Convert"
 
