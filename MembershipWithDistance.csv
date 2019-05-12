@@ -79,7 +79,7 @@ Catherine Folks,1027,East 24th Street,Los Angeles,Womack Temple CME Chruch,"Dyer
 Johnnie Folks,1027,East 24th Street,Los Angeles,Womack Temple CME Chruch,"Dyersberg, TN",2996135,2915841
 Johnny H. Hepler,1203,East Santa Barbara Avenue,Los Angeles,Wesley Chapel CME,"Los Angeles, CA",0,6907387
 Lula Mae George ,205,South Bedford Drive,Beverly Hills,Good Street Baptist Church,"Dallas, TX",2311726,6414824
-Georgia White,1510,West 36th Street,Los Angeles,First Baptist Church,"Toronto, Canada",4053820,-1
+Georgia White,1510,West 36th Street,Los Angeles,First Baptist Church,"Toronto, Canada",4053820,645000
 Oceola Wilson,1225,West 36th Street,Los Angeles,Warren ME Church,Pennsylvania,4199084,9900180
 Laura Hurryman,5118,Central Avenue,Los Angeles,Union Bethel AME ,"New Orleans, LA",3047945,2363880
 Gladys Moore,1122,East Santa Barbara Avenue,Los Angeles,Convert,"Los Angeles, CA",0,6907387
@@ -178,7 +178,7 @@ Bethel Dubose,1124,East 43rd Street,Los Angeles,New Hope Baptist Church,"Los Ang
 Alice Dawson,1100,White Knoll Drive,Los Angeles,Martin Temple,Minnesota,3054380,2792300
 Alene Russell,1628,East 103rd Place,Los Angeles,Convert,"Los Angeles, CA",0,6907387
 Harold Russell,1628,East 103rd Place,Los Angeles,Convert,"Los Angeles, CA",0,6907387
-Susan Fleming,1655,West 37th Street,Los Angeles,Saint Paul Episcopal Church,Bermuda Island,-1,-1
+Susan Fleming,1655,West 37th Street,Los Angeles,Saint Paul Episcopal Church,Bermuda Island,4921000,-1
 Mary Hoffman,1035,South Mariposa Avenue,Los Angeles,Messiah Baptist Church,"Grand Rapids, MI",3509480,5256106
 Martha Stratton,3321,Stanford Street,Los Angeles,Church of God,"Houston, TX ",2491141,6414824
 Mamie Miledge,4804,Ascot Street,Los Angeles,Ebenezer  Baptist Church,"Chicago, IL",3243702,7897241
@@ -222,7 +222,7 @@ Q.D. Davis,1050,East 55th Street,Los Angeles,AME Butchel Church,"Dallas, TX",231
 Mae Gordon,1292,West Jefferson Street,Los Angeles,Methodist Church,Alaska,5418630,72524
 Bessie Movies,1388,Newton Street,Los Angeles,Memorial Baptist Church,"Los Angeles, CA",0,6907387
 Williams Movies,1388,Newton Street,Los Angeles,Memorial Baptist Church,"Los Angeles, CA",0,6907387
-Elizabeth Thomas,5011,South Sam Pedro Street,Los Angeles,Liberty Baptist Church,"Evansville, In",3206134,-1
+Elizabeth Thomas,5011,South Sam Pedro Street,Los Angeles,Liberty Baptist Church,"Evansville, In",3206134,7897241
 Dora Johnson,2267,East El Contoneto Street,Los Angeles,Reclaimed,"Los Angeles, CA",0,6907387
 James E. Vinny,1633,Paloma Street,Los Angeles,Convert,"Los Angeles, CA",0,6907387
 Vivian Pinchen,867,East 46th Street,Los Angeles,Methodist Episcopal Church,"Los Angeles, CA",0,6907387
@@ -517,7 +517,7 @@ W.H. Edwards,985,East 33rd Street,Los Angeles,Convert,"Los Angeles, CA",0,690738
 Catherine Holmes,876,East 46th Street,Los Angeles,Central Baptist Church,"Saint Louis, MO",2937444,3784664
 W.M. Famber,1009,East 34th Street,Los Angeles,Saint Park ME Church,"Chicago, IL",3243702,7897241
 Bob Brooks,2320,South Central Avenue,Los Angeles,Convert,"Los Angeles, CA",0,6907387
-Julia Smith,259,East 45th Street,Los Angeles,Grant AME Church,"Toronto, Canada",4053820,-1
+Julia Smith,259,East 45th Street,Los Angeles,Grant AME Church,"Toronto, Canada",4053820,645000
 W.M. Henderson,1049,East 57th Street,Los Angeles,Convert,"Los Angeles, CA",0,6907387
 Ben Jones ,4114,Hooper Avenue,Los Angeles,Third Baptist Church,"San Francisco, CA",614541,6907387
 Lula Jones,1410,East 92nd Street,Los Angeles,Convert,"Los Angeles, CA",0,6907387
@@ -1059,7 +1059,7 @@ Lillian Anrum,1500,East 22nd Street,Los Angeles,Saint Joseph Catholic Church,"Lo
 J.B. Graves,1116,East 18th Street,Los Angeles,First Baptist Church,"Brenham, TX",2357531,6414824
 Geo Dilsworth ,1153,East 40th Place,Los Angeles,Wesley Chapel,"Los Angeles, CA",0,6907387
 O.W. Wesley,1930,West 37th Place,Los Angeles,Mount Zion Church,"Los Angeles, CA",0,6907387
-Wilfred Wein,2818,Glassell Street,Los Angeles,Episcopal Church,Jamaica,-1,-1
+Wilfred Wein,2818,Glassell Street,Los Angeles,Episcopal Church,Jamaica,4417000,-1
 Bessie T. Greggs,1649,West 37th Street,Los Angeles,Reclaimed,"Los Angeles, CA",0,6907387
 Earl M. Armstead,1649,West 37th Street,Los Angeles,Reinstated,"Los Angeles, CA",0,6907387
 Orleida Price,2826,Glassell Street,Los Angeles,Vernon AME Church,"Tulsa, OK",2305595,2336434
@@ -1461,7 +1461,7 @@ Pearl Lesley,778,East 48th Street,Los Angeles,Reinstated,"Los Angeles, CA",0,690
 Irene White,1411,East 22nd Street,Los Angeles,Roman Catholic Church,"Los Angeles, CA",0,6907387
 W.M. John Massey,4310,Morgan Street,Los Angeles,Zion Baptist Church,"Denver, CO",1635193,1123296
 Myrtle Love,2118,Amey Street,Los Angeles,Presbyterian Church,"Los Angeles, CA",0,6907387
-Jessie Tears,1001,East 29th Street,Los Angeles,Shiloh Baptist Church,"Alberta, Canada",2983233,-1
+Jessie Tears,1001,East 29th Street,Los Angeles,Shiloh Baptist Church,"Alberta, Canada",2983233,796169
 Ollie Bell Murphy,5110,McKinley Avenue,Los Angeles,Bethel AME Church,"San Antonio, TX",2176784,6414824
 W.M. Clyde Kennedy,1123,East 10th Street,Los Angeles,Tabernacle Baptist Church,"Dayton, OH",3514834,6907612
 Lynson Miller,1132,East 57th Street,Los Angeles,Emanuel AME Church,"San Antonio, TX",2176784,6414824
@@ -2169,7 +2169,7 @@ Elizabeth Bennett,525,South Stanford Street,Los Angeles,Catholic Church,"Los Ang
 Smogene Carroll,364,East 1st Street,Los Angeles,New Hope Baptist Church,"Greenville, TX",2392939,6414824
 Munuel Wilson,3310,Hooper Avenue,Los Angeles,Smith Chapel AME Church,"Dallas, TX",2311726,6414824
 Fannie Baker,848,East 41st Street,Los Angeles,Unity Church,"Los Angeles, CA",0,6907387
-Coxdelia Marshall,,,Los Angeles,Saint James AME Church,"Centianna, KT",-1,-1
+Coxdelia Marshall,,,Los Angeles,Saint James AME Church,"Centianna, KT",2182000,-1
 Callie Hill,3120,South Raymond Street,Los Angeles,AME Church,"Clear View, OK",2263036,2336434
 Willie Hayden,1800,South Central Avenue,Los Angeles,Trinity ME Church,"Houston, TX ",2491141,6414824
 Emma Williams,1024,South Besends Street,Los Angeles,Ebenezer Baptist Church,"Chicago, IL",3243702,7897241
@@ -2279,7 +2279,7 @@ James Crittendon,815,East 32nd Street,Los Angeles,Grant Chapel,"Los Angeles, CA"
 Robert Wyatt,1254,East 50th Street,Los Angeles,Church of God in Christ,"Los Angeles, CA",0,6907387
 W.M. Difon,1327,East Washington Boulevard,Los Angeles,Saint Paul AME Church,"Saint Louis, MO",2937444,3784664
 Arlene James,1247,East Adams Boulevard,Los Angeles,Mount Zion Baptist Church,"Los Angeles, CA",0,6907387
-Melvin Johnson,,,Los Angeles,Holiness Church,Jamaica,-1,-1
+Melvin Johnson,,,Los Angeles,Holiness Church,Jamaica,4417000,-1
 Catherine McCulloh,2020,West 37th Place,Los Angeles,Reinstated,"Los Angeles, CA",0,6907387
 Helen Smith,1116,East 11th Street,Los Angeles,Second Mount Calvary Church,"New Orleans, LA",3047945,2363880
 Geraldine Jenkins,1038,East 28th Street,Los Angeles,Saint Phillips Church,"Los Angeles, CA",0,6907387
