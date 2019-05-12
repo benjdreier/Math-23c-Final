@@ -178,6 +178,50 @@ H <- mean(km) - qt(0.025, n-1) * sd(km)/sqrt(n); H
 
 
 
+#SECTION 4: Is there a relationship between distance traveled and state population?
+#BONUS POINTS: 14, 15, 16
+
+#Let's try to analyze our only two numeric columns, distance traveled and state population
+#Is there some kind of relationship between traveling from a farther away state and coming from a larger or smaller state?
+km <- M$Distance/1000; km #convert our distances from meters to km
+plot(km ~ M$State.Population, col = "blue", xlab = "State population in 1940", ylab = "Distance traveled") #here is a scatter plot comparing distance migrated with state population
+mod <- lm(km ~ M$State.Population); mod #we found the regression line; apparently Distance Traveled to LA = -1.407*10^4 * (State population) + 2.404*10^3
+
+#BONUS POINT 14! used linear regression
+abline(mod, col = "green") #now let's add the regression line 
+#according to this regression line, the larger a migrant's state population, the less distance they traveled to LA
+#So migrants from smaller states were far more likely to travel longer distances to LA; perhaps reflecting lower populations in the Northeast/Midwest in 1940?
+#However, this relationship might not be statistically significant.
+summary(mod) #Multiple R squared is 0.05, adjusted R squared is 0.05
+#Evidently, our R squared value is about 0.05, indicating a very inaccurate regression line. Our regression line only explains about 5% of the variability of the response data around its mean, indicating a very weak correlation. distance traveled and state population in 1940 don't seem to be correlated well with each other, but let's use correlation to verify!
+
+#BONUS POINT 16! used correlation here.
+#Now let's look at the correlation
+res <- cor(km, M$State.Population); res
+round(res,2) #our correlation is -0.22. Since our correlation is negative, an increase in state population predicts a decrease the distance traveled. However, again this is a very weak correlation. There may not be a real relationship between the variables 
+
+#BONUS POINT 15! logistic regression
+#let's try to use a logistic regression to model Distance Traveled as a function of State Population. Note that we need to normalize these variables between 0 and 1, so I divided each variable by its maximimum value in the dataset
+pop <- M$State.Population/max(M$State.Population)
+k <- km/max(km)
+plot(pop, k, xlab = "State population in 1940", ylab = "Distance Traveled") #here's another plot 
+
+#Start with minus the log of the likelihood function from Paul's code
+MLL<- function(alpha, beta) {
+  -sum( log( exp(alpha+beta*pop)/(1+exp(alpha+beta*pop)) )*k
+        + log(1/(1+exp(alpha+beta*pop)))*(1-k) )
+}
+
+#R has a function that will maximize this function of alpha and beta
+#install.packages("stats4")   #needs to be run at most once
+library(stats4)
+results<-mle(MLL, start = list(alpha = 0, beta = 0)) #an initial guess is required
+results@coef #alpha = -0.158, beta = -1.725 are the parameters for our logistic regression curve
+curve( exp(results@coef[1]+results@coef[2]*x)/ (1+exp(results@coef[1]+results@coef[2]*x)),col = "blue", add=TRUE) #the blue line is the logistic regression curve
+#The logistic regression curve does not look terrible, but considering how low our correlation was earlier it is unlikely that there is a substantial correlation between distance traveled and state population in 1940
+
+#END SECTION 4
+
 
 
 # Ben's work
