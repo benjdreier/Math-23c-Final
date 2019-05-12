@@ -72,11 +72,11 @@ for(i in length(Q)){
 HomeLA <- which(M$Hometown == "Los Angeles, CA"); HomeLA #People with hometowns LA
 length(HomeLA) #Los Angeles, CA has 1,232
 HomeNotLA <- which(M$Hometown != "Los Angeles, CA"); HomeNotLA #All people who were not from LA 
-length(HomeNotLA) #Not LA has 1,821
+length(HomeNotLA) #Not LA has 1,814
 ConvertsA <-which(M$Former.Church == "Convert"); ConvertsA #All the converts
-length(Converts) #427 converts
+length(ConvertsA) #427 converts
 NotConverts <-which(M$Former.Church != "Convert"); NotConverts #All the non-converts
-length(NotConverts) #2,626 non-converts
+length(NotConverts) #2,619 non-converts
 
 #Second, let's make some logical columns
 LA <- M$Hometown == "Los Angeles, CA"
@@ -85,7 +85,7 @@ HomeR <- data.frame(LA, Converts) #make a dataframe with just the logical column
 
 #Now let's build a contingency table #NOTICE THATTHIS MEETS REQUIRED GRAPHICAL DISPLAY CRITERIA 4
 tbl <- table(HomeR$LA,HomeR$Converts); tbl
-#Looking at the table, there are 1818 who are not originally from LA and aren't converts; 3 who are not originally from LA and are converts; 808 originally from LA who are not converts, and 424 originally from LA who are converts
+#Looking at the table, there are 1811 who are not originally from LA and aren't converts; 3 who are not originally from LA and are converts; 808 originally from LA who are not converts, and 424 originally from LA who are converts
 
 #Now let's compare this with what the table would look like if Hometown and Convert status were independent
 tbl #our actual table
@@ -103,9 +103,8 @@ chisq.test(HomeR$LA,HomeR$Converts)
 #Quote from Proctor on significance of this: It tells me that the church was able to pull in people from LA with no religious affiliation at a time (WWII) when people were looking for resources and help.  The church was taken over by the second pastor (Clayton Russell) at this point.  He was the first black preaching radio broadcaster on the West Coast and lived a celebrity lifestyle.  So I know that the church was a big draw for migrants and local Angelenos.   But the fact that non churched people in LA were joining at such a high rate proves larger claims about the church’s significance.
 
 #Earning Bonus Point 8
-#This relationship between having a hometown of Los Angeles and being a Convert to Christianity was not apparent at all—my hypothesis at the beginning was totally wrong. But evidently, this relationship is very strong considering 424 of the 427 converts were from LA despite the fact that 1,821 of the 3,053 church members had a non-LA hometown.
+#This relationship between having a hometown of Los Angeles and being a Convert to Christianity was not apparent at all—my hypothesis at the beginning was totally wrong. But evidently, this relationship is very strong considering 424 of the 427 converts were from LA despite the fact that 1,814 of the 3,046 church members had a non-LA hometown.
 #Therefore, this is a convincing relationship that might not have looked statistically significant but turns out to be so.
-
 
 #END REQUIRED ANALYSIS 3 AND BONUS POINT 8
 #END SECTION 1
