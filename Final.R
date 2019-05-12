@@ -9,9 +9,9 @@
 
 #DOES THE DATASET MEET THE REQUIRED DATASET STANDARDS??
 #1- dataframe: yes, we have a .csv file with columns and rows
-#2- 
-#3- 
-#4-
+#2- yes, name, street name, city, former church, and hometown are all categorical columns, and several logical columns are made throughout this data analysis
+#3- yes, we used a python script to add two numerical columns: 1st, distance of hometown from LA; 2nd, population of home state in 1940
+#4-yes, there are over 3000 rows representing over 3000 church members
 
 
 #DOES THE DATASET MEET THE REQUIRED GRAPHICAL DISPLAY STANDARDS?
@@ -39,9 +39,14 @@
 library("ggplot2")
 
 #First, let's load the data file. Let M be the data file.
-M <- read.csv("MembershipRolls.csv"); head(M)
+M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file was edited to add two numeric columns using a Python script since the original file did not have any numeric columns and was simply a list of members
+#Ben wrote a python script, distancegetter.py, that gets the distance of each hometown from LA (aka how far an individual moved to LA) and their home state's population
 
+#Note: since certain individuals' Hometowns did not have data associated with them, those individuals have been deleted for the sake of this analysis. 
+#Less than 0.3% of individuals were deleted; I deleted Ritta Penden, Susan Fleming, John Hunt, George H. Jones, Wilfred Wein, Coxdelia Marshall, and Melvin Johnson since their hometowns either did not exist or had no data according to the API
+#Since these individuals represent less than 0.3% of the total number of individuals, which is over 3000, this should not meaningfully impact our data
 #Now, let's figure out which people currently lived in Los Angelos and place them in the dataframe livesLA.
+
 livesLA <- which(M$City == "Los Angeles"); livesLA
 livesBH <- which(M$City == "Beverly Hills"); livesBH #Beverly Hills
 livesHW <- which(M$City == "Hollywood"); livesHW #Hollywood
