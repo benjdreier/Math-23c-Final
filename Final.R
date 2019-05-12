@@ -175,7 +175,7 @@ for(i in 1:N){
   diffs[i] = disConverts - dOthers #as likely to be negative or positive
 }
 mean(diffs) #should be close to zero, this is indeed near zero
-hist(diffs, breaks = "FD", xlim = c(-2000,500)) #now display the observed difference on the histogram
+hist(diffs, breaks = "FD", xlim = c(-2000,500), xlab = "Observed Differences", main = "Histogram of Observed Differences") #now display the observed difference on the histogram
 
 other <- sum(km * (M$Former.Church != "Convert"))/sum((M$Former.Church != "Convert")); other
 observed <- migD - other ; observed #observed difference between mean for Converts and non-Convert; this is -1829 km
@@ -235,7 +235,7 @@ for(i in 1:N){
   diffs[i] = dBaptists - dOthers #as likely to be negative or positive
 }
 mean(diffs) #should be close to zero, this is indeed near zero
-hist(diffs, breaks = "FD", xlim = c(-500,900)) #now display the observed difference on the histogram
+hist(diffs, breaks = "FD", xlim = c(-500,900), main = "Histogram of Observed Differences", xlab = "Observed Differences") #now display the observed difference on the histogram
 abline(v = observed, col = "red") #notice that the observed difference is very far off from the random simulations
 #what is the probability that a difference this large could have arisen with a random subset?
 pvalue <- (sum(diffs >= observed)+1)/(N+1); pvalue #notice that the p-value is about 0.0001, which is far less than 0.05 (our typical threshold for signifiance). Therefore, the difference between Distance traveled for Baptists and non-Baptists is statistically significant. It is incredibly unlikely that it arose by chance.
