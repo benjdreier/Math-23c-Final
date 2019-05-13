@@ -16,7 +16,7 @@
 #DOES THE DATASET MEET THE REQUIRED GRAPHICAL DISPLAY STANDARDS?
 #1- yes, see section 5 for bar plot
 #2- yes, see section 2 for histograms (also in other places)
-#3- 
+#3- yes, see section 7 for a bad attempt to fit the curve
 #4- yes, see contingency table in section 1
 
 #DOES THE DATASET MEET THE REQUIRED ANALYSIS STANDARDS?
@@ -139,7 +139,6 @@ lbls <- paste(lbls, slices, pct) # add percents to labels
 lbls <- paste(lbls,"%",sep="") # ad % to labels 
 pie(slices,labels = lbls, col=rainbow(length(lbls)),
     main="Locals and Migrants at the Church")
-
 
 #END REQUIRED ANALYSIS 3 AND BONUS POINTS 8,11
 #END SECTION 1
@@ -500,3 +499,14 @@ m
 addMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church)
 #BONUS POINTS 5, 19: This map with location markers is not found in any of the textbook or class scripts
 #END SECTION 6
+
+#BEGIN SECTION 7
+#Let's try to fit the distances of migrants to a probability density function
+dist <- M$Distance[M$Distance>0]; dist #get all the distances of the migrants
+mu <- mean(dist); mu #mean
+sigma <- sd(dist); sigma #standard deviation
+hist(dist, probability = TRUE, xlab = "Distance", main = "Distances traveled from hometown for migrants") #make a histogram
+curve(dnorm(x, mu, sigma), add = TRUE, col = "blue") #evidently, the distances of migrants don't really follow a normal distribution neatly
+#REQUIRED ANALYSIS 3^ this is a probability density function overlaid on a histogram
+
+#END SECTION 7
