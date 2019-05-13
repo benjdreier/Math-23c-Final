@@ -28,13 +28,15 @@
 #WHAT BONUS POINTS HAVE WE ACHIEVED?
 #2- Yes, our dataset has over 3000 individuals, a very large dataset. If you look in Section 2, we actually take samples from the population there.
 #3- See one-page document on ethical issues related to collection of data in attached files.
+#5- See section 6 for a heat map with markers
 #8- See Section 1 for convincing demonstration of a relationship that might not have been statistically significant but turns out to be so, also in Section 2
 #9- See Section 4 or 5; state population may have been statistically significant but in fact does not seem to correlate with anything
+#11- See section 6 for a heat map made with ggplot
 #12- See Section 2 for a permutation test that works better than classical methods
 #14- See Section 4 for a use of linear regression
 #15- See Section 4 for calculation and display of a logistic regression curve
 #16- See Section 4 for an appropriate use of correlation
-#19- See Section 1 for pie charts
+#19- See Section 1 for pie charts, or see Section 6 for a heat map
 #20- See Section 2 for calculation of a confidence interval
 #22- Ben and Michael are two people; the team has exactly two members! =)
 
@@ -43,10 +45,11 @@
 
 #SECTION 0: LOADING THE DATA FILE AND BASIC ANALYSIS
 #install.packages("ggplot2") Make sure to install ggplot2 once
-library("ggplot2")
+library("ggplot2") #note that this is required to run Section 6
 
 #First, let's load the data file. Let M be the data file.
 M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file was edited to add two numeric columns using a Python script since the original file did not have any numeric columns and was simply a list of members
+#also notice that the file has a column of just the states that individuals are from
 #BONUS POINT 2: notice that our dataset has over 3,000 individuals. This is definitely a data set so large it can be used as a population from which samples are taken, see section 2 for actual samples from the population
 #Ben wrote a python script, distancegetter.py, that gets the distance of each hometown from LA (aka how far an individual moved to LA) and their home state's population
 
@@ -420,6 +423,10 @@ barplot(table(p), col = "green", xlab = "Denomination", ylab = "Average Home Sta
 
 #END SECTION 5
 
+#BEGIN SECTION 6
+#This section makes a cool map of the population distribution! :)
+#Make sure that you have downloaded ALL of the data files 
+#BONUS POINTS: 5, 11, 19
 
 # Let's try to map
 # First, go through and extract 
@@ -429,35 +436,38 @@ install.packages('ggmap')
 install.packages("leaflet")
 install.packages("geojsonio")
 
-
-library(ggmap)
+library(ggmap) #note that ggmap calls ggplot2, so using ggmap satisfies BONUS POINT 11
 library(leaflet)
 library(geojson)
 citation("ggmap")
-
-# Key removed for security; if you need to run this part of the code yourself, I can provide a key
-register_google(key="_KEY_", write=TRUE)
 
 # Iterate through hometowns and get their latitude and longitude
 # This takes a while and requires a key, try to only run it once if at all
 # You can also just use the backup file I created below
 
-##Skip This >##
-locs <- {}
-for(i in seq(1, length(M$Hometown))){
-  town <- toString(M$Hometown[i])
-  loc <- geocode(town)
-  locs <- rbind(locs, loc)
-}
+# Key removed for security; if you need to run this part of the code yourself, I can provide a key
+#register_google(key="_KEY_", write=TRUE)
 
-write.csv(locs, "locations2.csv")
+
+##Skip This, just use the file backup "locations2.csv">##
+#locs <- {}
+#for(i in seq(1, length(M$Hometown))){
+ # town <- toString(M$Hometown[i])
+  #loc <- geocode(town)
+  #locs <- rbind(locs, loc)
+#}
+
+#write.csv(locs, "locations2.csv")
 ##Skip This <##
 
 #Instead of running this again, just load from a file backup I made
 locs_file <- read.csv("locations2.csv")
 
+# Now we can map the counts
+# Get state outlines
+states <- geojsonio::geojson_read("us-states.json", what="sp")
 
-# Before mapping, Count occurances of each state
+# Before mapping, Count occurrences of each state
 
 counts = {}
 for(i in 1:length(states$name)){
@@ -470,20 +480,23 @@ for(i in 1:length(states$name)){
 states$count <- counts
 
 # Now we can decide how to break up the bins
-barplot((sort(log10(counts+1), decreasing=TRUE)))
+barplot((sort(log10(counts+1), decreasing=TRUE)), main = "Distribution of log(number of people from each state)", ylab = "log(number of people from each state)", col= "blue", xlab = "states ordered in order of decreasing number of people") #notice that this is a graph of the log of the number of individuals with hometowns of each state
 # The log of counts has a nice linear shape, so we'll base bins off of that
 
 bins <- c(0, 10^seq(0, 3.5, 0.5))
 pal <- colorBin("YlOrRd", domain = states$count, bins = bins)
 
-# Now we can map the counts
-# Get state outlines
-states <- geojsonio::geojson_read("us-states.json", what="sp")
 
 m <- leaflet(states)
 m <- addTiles(m)
 m <- addPolygons(m, fillColor = ~pal(counts), weight=1, color="white", fillOpacity = 0.7)
-m
+m 
+
+#LOOK AT OUR PRETTY MAP in the viewer! (screenshot is also attached in the 1 page handout)
+#BONUS POINT 11: THIS MAP IS GORGEOUS, THANKS TO GGPLOT!! :)
+#BONUS POINTS 5, 19: This map is not found in any of the textbook or class scripts
 
 # If we want to plot every individual location:
 addMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church)
+#BONUS POINTS 5, 19: This map with location markers is not found in any of the textbook or class scripts
+#END SECTION 6
