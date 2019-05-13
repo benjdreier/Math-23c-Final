@@ -421,39 +421,69 @@ barplot(table(p), col = "green", xlab = "Denomination", ylab = "Average Home Sta
 #END SECTION 5
 
 
+# Let's try to map
+# First, go through and extract 
+
+# Only install these once
+install.packages('ggmap')
+install.packages("leaflet")
+install.packages("geojsonio")
 
 
-# Ben's work
+library(ggmap)
+library(leaflet)
+library(geojson)
+citation("ggmap")
 
-# Let's talk churches. It looks like there are 759 unique churches listed here:
-Churches <- unique(M$Former.Church); Churches
+# Key removed for security; if you need to run this part of the code yourself, I can provide a key
+register_google(key="_KEY_", write=TRUE)
 
-# Enumerate some words pointing to church denomination
-Denoms <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic")
+# Iterate through hometowns and get their latitude and longitude
+# This takes a while and requires a key, try to only run it once if at all
+# You can also just use the backup file I created below
 
-# Function to get which churches contain which denomination strings
-whichContain <- function(ch, dn){
-  denoms <- rep("", length(ch))
-  i <- 1
-  for(c in ch){
-    for(d in dn){
-      #Check if the church has the denomination
-      if( is.na(grepl(d, c)) ){break}
-      if( grepl(d, c) ){
-        denoms[i] = paste(denoms[i], d);
-      }
-    }
-    i <- i + 1
-  }
-  return(denoms)
+##Skip This >##
+locs <- {}
+for(i in seq(1, length(M$Hometown))){
+  town <- toString(M$Hometown[i])
+  loc <- geocode(town)
+  locs <- rbind(locs, loc)
 }
 
-grepl(Denoms[3], Churches[4])
+write.csv(locs, "locations2.csv")
+##Skip This <##
 
-WhichDenoms <- whichContain(Churches, Denoms)
+#Instead of running this again, just load from a file backup I made
+locs_file <- read.csv("locations2.csv")
 
-Churches[which(WhichDenoms == "")]
 
-length(Churches)
+# Before mapping, Count occurances of each state
 
-denoms[3]
+counts = {}
+for(i in 1:length(states$name)){
+  curr_state <- toString(states$name[i])
+  state_count <- length(M$State[M$State == curr_state])
+  counts = c(counts, state_count)
+}
+
+# Put these counts in the states object used for visualization
+states$count <- counts
+
+# Now we can decide how to break up the bins
+barplot((sort(log10(counts+1), decreasing=TRUE)))
+# The log of counts has a nice linear shape, so we'll base bins off of that
+
+bins <- c(0, 10^seq(0, 3.5, 0.5))
+pal <- colorBin("YlOrRd", domain = states$count, bins = bins)
+
+# Now we can map the counts
+# Get state outlines
+states <- geojsonio::geojson_read("us-states.json", what="sp")
+
+m <- leaflet(states)
+m <- addTiles(m)
+m <- addPolygons(m, fillColor = ~pal(counts), weight=1, color="white", fillOpacity = 0.7)
+m
+
+# If we want to plot every individual location:
+addMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church)

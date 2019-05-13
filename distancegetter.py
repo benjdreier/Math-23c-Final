@@ -4,7 +4,7 @@ import csv
 destination = "Los Angeles"
 towns = set()
 
-with open("MembershipRolls.csv", "rU") as rolls:
+with open("MembershipEdited.csv", "rU") as rolls:
     r = csv.reader(rolls)
     for row in r:
         towns.add(row[5])
@@ -21,20 +21,20 @@ hometown_dict = {}
 ##        print("Invalid town: ", hometown)
 ##    hometown_dict[hometown] = dist
 
-for hometown in towns:
-    response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=LosAngeles,CA&destinations="+hometown+"&key=AIzaSyDHZoOke3Lz4D0KFqjdynNuRi5UrfjXOgg")
-    data = response.json()
-
-    # Distance in meters
-    try:
-        dist = data["rows"][0]["elements"][0]["distance"]["value"]
-        if dist == 0:
-            print("Invalid town: ", hometown)
-        hometown_dict[hometown] = dist
-    except:
-        print("OOF")
-        print(hometown)
-        hometown_dict[hometown] = -1
+##for hometown in towns:
+##    response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=LosAngeles,CA&destinations="+hometown+"&key=AIzaSyDHZoOke3Lz4D0KFqjdynNuRi5UrfjXOgg")
+##    data = response.json()
+##
+##    # Distance in meters
+##    try:
+##        dist = data["rows"][0]["elements"][0]["distance"]["value"]
+##        if dist == 0:
+##            print("Invalid town: ", hometown)
+##        hometown_dict[hometown] = dist
+##    except:
+##        print("OOF")
+##        print(hometown)
+##        hometown_dict[hometown] = -1
         
     
 
@@ -151,41 +151,45 @@ def get_state(town_str):
         if state in nicknames:
             return nicknames[state]
         else:
-            print("OOPS:", state)
+            #print("OOPS:", state)
             return state
     else:
-        print("Bare", town_str)
+        #print("Bare", town_str)
         return town_str
 
     
 
 
-with open("MembershipRolls.csv", "r") as rolls:
-    with open("MembershipWithDistance.csv", "w") as output:
+with open("MembershipEdited.csv", "r") as rolls:
+    with open("MembershipLastEdit.csv", "w") as output:
         r = csv.reader(rolls)
         wr = csv.writer(output)
         
         all = []
         header = r.next()
-        header.append("Distance")
-        header.append("State Population")
+        #header.append("Distance")
+        #header.append("State Population")
+        header.append("State")
         all.append(header)
         print(header)
         for row in r:
             town_name = row[5]
 
             # Add distance
-            row.append(hometown_dict[town_name])
+            #row.append(hometown_dict[town_name])
             #row.append("a distance")
 
             # Add state pop
+##            state = get_state(town_name)
+##            if state in state_pops:
+##                pop = state_pops[state]
+##            else:
+##                print("Fuck", state)
+##                pop = -1
+##            row.append(pop)
+            # Add State
             state = get_state(town_name)
-            if state in state_pops:
-                pop = state_pops[state]
-            else:
-                print("Fuck", state)
-                pop = -1
-            row.append(pop)
+            row.append(state)
 
             # Put the new row in the list for the writer
             all.append(row)
