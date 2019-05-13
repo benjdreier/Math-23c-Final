@@ -46,6 +46,15 @@
 #SECTION 0: LOADING THE DATA FILE AND BASIC ANALYSIS
 #install.packages("ggplot2") Make sure to install ggplot2 once
 library("ggplot2") #note that this is required to run Section 6
+# Only install these once
+install.packages('ggmap')
+install.packages("leaflet")
+install.packages("geojsonio")
+
+library(ggmap) #note that ggmap calls ggplot2, so using ggmap satisfies BONUS POINT 11
+library(leaflet)
+library(geojson)
+citation("ggmap")
 
 #First, let's load the data file. Let M be the data file.
 M <- read.csv("MembershipEdited.csv"); head(M) #notice that the original file was edited to add two numeric columns using a Python script since the original file did not have any numeric columns and was simply a list of members
@@ -430,16 +439,6 @@ barplot(table(p), col = "green", xlab = "Denomination", ylab = "Average Home Sta
 
 # Let's try to map
 # First, go through and extract 
-
-# Only install these once
-install.packages('ggmap')
-install.packages("leaflet")
-install.packages("geojsonio")
-
-library(ggmap) #note that ggmap calls ggplot2, so using ggmap satisfies BONUS POINT 11
-library(leaflet)
-library(geojson)
-citation("ggmap")
 
 # Iterate through hometowns and get their latitude and longitude
 # This takes a while and requires a key, try to only run it once if at all
