@@ -167,7 +167,19 @@ n = 424 #draw a sample of size 424 since our sample should be equal to the numbe
 curve(dnorm(x, mu, sigma/sqrt(n)), from = 0, to = 2500)
 abline(v = migD, col = "red")     #our mean distance for converts looks good, it's on the far left tail
 pnorm(migD, mu, sigma/sqrt(n), lower.tail = FALSE) #and notice that an average distance greater than ours should arise roughly 100% of the time
+
+#Let's try to use a single sample of size 424 to see whether our actual outcome is in the confidence interval
+mean <- mean(sample(M$Distance/1000, 424)); mean #take one sample and look at the value
+mean <- 1491.96 #our sample is 1491.96
+
+#now make a 95% confidence interval 
+l <- (mean + qnorm(0.025) * (sigma/sqrt(424))); l #lower end is 1347.90 km
+u <- (mean - qnorm(0.025) * (sigma/sqrt(424))); u #upper end is 1636.02 km
+
+#Since our actual value is 7.26 km, far outside the confidence interval, so our outcome probably did not arise randomly. The difference between mean distance migrated for Converts and the full population did not arise by chance
+
 #BONUS POINT 2: notice how we drew samples from the total population here! This was possible because of how large our dataset is, with over 3000 entries
+#BONUS POINT 20: we also calculate a confidence interval here!
 
 #Here is a way to shade some of the area
 xpoints <- c(migD,seq(migD,2500,1),2500) #define polygon to shade
@@ -178,6 +190,7 @@ graphics::polygon(xpoints,ypoints,col="skyblue") #notice that virtually the enti
 
 #Approach 2
 #Equivalent approach - create a statistic whose distribution is N(0,1)
+#Pretend that we don't have access to the entire population
 #In the days of printed statistical tables, this was a good idea.
 Z = (migD-mu)/(sigma/sqrt(n)); Z 
 
@@ -205,7 +218,7 @@ L <- mean(km) + qt(0.025, n-1) * sd(km)/sqrt(n); L
 #and the higher end of the confidence interval is 1725.05
 H <- mean(km) - qt(0.025, n-1) * sd(km)/sqrt(n); H
 
-#So if the distance migrated from one's hometown followed a normal distribution, then the 95% confidence interval for the distance migrated would be [1436.10, 1725.05]
+#So if the distance migrated from one's hometown followed a Student t distribution, then the 95% confidence interval for the distance migrated would be [1436.10, 1725.05]
 #But because actual distance migrated from one's hometown for Converts to Christianity is just 7.26, FAR outside the actual confidence interval, we know that this probably did not arise by chance
 #In other words, I have shown more quantiatively than Section 1 that Converts are likely to have migrated a much lower distance, and that this difference is statistically significant.
 
