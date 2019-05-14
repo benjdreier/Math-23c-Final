@@ -1,18 +1,21 @@
 import requests
 import csv
 
-destination = "Los Angeles"
+# Start by getting the set of unique towns
 towns = set()
 
 with open("MembershipEdited.csv", "rU") as rolls:
     r = csv.reader(rolls)
     for row in r:
+        # Note that hometown must be stored in index 5. Sloppy but works.
         towns.add(row[5])
 
-print(len(towns), "uniqe towns")
+print(len(towns), "unique towns")
 
 # Get distance info
 hometown_dict = {}
+
+# Old approach with original api
 ##for hometown in towns:
 ##    response = requests.get("https://www.distance24.org/route.json?stops="+hometown+"|"+destination)
 ##    data = response.json()
@@ -21,20 +24,21 @@ hometown_dict = {}
 ##        print("Invalid town: ", hometown)
 ##    hometown_dict[hometown] = dist
 
-##for hometown in towns:
-##    response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=LosAngeles,CA&destinations="+hometown+"&key=AIzaSyDHZoOke3Lz4D0KFqjdynNuRi5UrfjXOgg")
-##    data = response.json()
-##
-##    # Distance in meters
-##    try:
-##        dist = data["rows"][0]["elements"][0]["distance"]["value"]
-##        if dist == 0:
-##            print("Invalid town: ", hometown)
-##        hometown_dict[hometown] = dist
-##    except:
-##        print("OOF")
-##        print(hometown)
-##        hometown_dict[hometown] = -1
+# New approach with updated google API
+for hometown in towns:
+    response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=LosAngeles,CA&destinations="+hometown+"&key=AIzaSyDHZoOke3Lz4D0KFqjdynNuRi5UrfjXOgg")
+    data = response.json()
+
+    # Distance in meters
+    try:
+        dist = data["rows"][0]["elements"][0]["distance"]["value"]
+        if dist == 0:
+            print("Invalid town: ", hometown)
+        hometown_dict[hometown] = dist
+    except:
+        print("OOF")
+        print(hometown)
+        hometown_dict[hometown] = -1
         
     
 
@@ -145,16 +149,16 @@ nicknames = {"NY": "New York",
 "NV": "Nevada", 
 "AK": "Alaska"}
 
+# Extract just the state from a string with a town name. Works in most cases,
+# handles some edge cases.
 def get_state(town_str):
     if "," in town_str:
         state = town_str[town_str.index(",")+1:].strip()
         if state in nicknames:
             return nicknames[state]
         else:
-            #print("OOPS:", state)
             return state
     else:
-        #print("Bare", town_str)
         return town_str
 
     
@@ -167,8 +171,8 @@ with open("MembershipEdited.csv", "r") as rolls:
         
         all = []
         header = r.next()
-        #header.append("Distance")
-        #header.append("State Population")
+        header.append("Distance")
+        header.append("State Population")
         header.append("State")
         all.append(header)
         print(header)
@@ -176,17 +180,18 @@ with open("MembershipEdited.csv", "r") as rolls:
             town_name = row[5]
 
             # Add distance
-            #row.append(hometown_dict[town_name])
-            #row.append("a distance")
+            row.append(hometown_dict[town_name])
+            row.append("a distance")
 
             # Add state pop
-##            state = get_state(town_name)
-##            if state in state_pops:
-##                pop = state_pops[state]
-##            else:
-##                print("Fuck", state)
-##                pop = -1
-##            row.append(pop)
+            state = get_state(town_name)
+            if state in state_pops:
+                pop = state_pops[state]
+            else:
+                print("State not recognized:", state)
+                pop = -1
+            row.append(pop)
+            
             # Add State
             state = get_state(town_name)
             row.append(state)
