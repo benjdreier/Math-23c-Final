@@ -28,10 +28,12 @@
 #WHAT BONUS POINTS HAVE WE ACHIEVED?
 #2- Yes, our dataset has over 3000 individuals, a very large dataset. If you look in Section 2, we actually take samples from the population there.
 #3- See one-page document on ethical issues related to collection of data in attached files.
+#4 - See one-page document on ethical issues related to final results in attached files.
 #5- See section 6 for a heat map with markers
 #8- See Section 1 for convincing demonstration of a relationship that might not have been statistically significant but turns out to be so, also in Section 2
 #9- See Section 4 or 5; state population may have been statistically significant but in fact does not seem to correlate with anything
-#11- See section 6 for a heat map made with ggplot
+#10- See Section 5 for the definition of a function to extract church denominations or the .py script and usage of an API to gather information
+#11- See section 6 for a heat map made with ggplot and ggmaps
 #12- See Section 2 for a permutation test that works better than classical methods
 #14- See Section 4 for a use of linear regression
 #15- See Section 4 for calculation and display of a logistic regression curve
@@ -341,6 +343,7 @@ curve( exp(results@coef[1]+results@coef[2]*x)/ (1+exp(results@coef[1]+results@co
 Churches <- (M$Former.Church); Churches #column of all individuals churches
 Denoms <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic") # Enumerate some words pointing to church denomination
 # Function to get which churches contain which denomination strings
+#BONUS POINT 10: Professional looking software engineering, defining functions
 whichContain <- function(ch, dn){
   denoms <- rep("", length(ch))
   i <- 1
