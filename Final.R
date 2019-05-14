@@ -38,6 +38,7 @@
 #14- See Section 4 for a use of linear regression
 #15- See Section 4 for calculation and display of a logistic regression curve
 #16- See Section 4 for an appropriate use of correlation
+#18- See section 2 for use of theoretical knowledge of sampling distributions with the CLT analysis
 #19- See Section 1 for pie charts, or see Section 6 for a heat map
 #20- See Section 2 for calculation of a confidence interval
 #22- Ben and Michael are two people; the team has exactly two members! =)
@@ -161,6 +162,7 @@ migD <- sum(km * (M$Former.Church == "Convert"))/sum((M$Former.Church == "Conver
 #Pretend that we are drawing a random sample that is the same size as the number of Converts
 #The CLT says that if we draw a sample of size n from the total population,
 #the mean will be 1580.57 km, the SD will be sigma/sqrt(n), the distribution normal
+#Notice how we used theoretical knowledge of sample distributions with the CLT
 n = 424 #draw a sample of size 424 since our sample should be equal to the number of converts
 curve(dnorm(x, mu, sigma/sqrt(n)), from = 0, to = 2500)
 abline(v = migD, col = "red")     #our mean distance for converts looks good, it's on the far left tail
@@ -438,7 +440,7 @@ barplot(table(p), col = "green", xlab = "Denomination", ylab = "Average Home Sta
 #BEGIN SECTION 6
 #This section makes a cool map of the population distribution! :)
 #Make sure that you have downloaded ALL of the data files 
-#BONUS POINTS: 5, 11, 19
+#BONUS POINTS: 5, 10, 11, 19
 
 # Let's try to map
 # First, go through and extract 
@@ -469,7 +471,12 @@ locs_file <- read.csv("locations2.csv")
 # Get state outlines
 states <- geojsonio::geojson_read("us-states.json", what="sp")
 
-# Before mapping, Count occurrences of each state
+#Let's make a quick table of all the States counts		
+table(sort(M$State)) 
+#notice the top states of migration: 1. California (1364) 2. Texas (501) 3. Illinois (159) 4. Louisiana (131). Missouri (115)		
+
+# Before mapping, Count occurrences of each state in the states object		
+# Doing it this way ensures that each count corresponds to the correct state
 
 counts = {}
 for(i in 1:length(states$name)){
@@ -486,12 +493,13 @@ barplot((sort(log10(counts+1), decreasing=TRUE)), main = "Distribution of log(nu
 # The log of counts has a nice linear shape, so we'll base bins off of that
 
 bins <- c(0, 10^seq(0, 3.5, 0.5))
-pal <- colorBin("YlOrRd", domain = states$count, bins = bins)
+pal <- colorBin("YlOrRd", domain = states$count, bins = floor(bins))
 
 
 m <- leaflet(states)
 m <- addTiles(m)
 m <- addPolygons(m, fillColor = ~pal(counts), weight=1, color="white", fillOpacity = 0.7)
+m <- addLegend(m, "bottomright", pal=pal, values=counts)
 m 
 
 #LOOK AT OUR PRETTY MAP in the viewer! (screenshot is also attached in the 1 page handout)
@@ -499,7 +507,7 @@ m
 #BONUS POINTS 5, 19: This map is not found in any of the textbook or class scripts
 
 # If we want to plot every individual location:
-addMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church)
+addCircleMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church, radius=1)
 #BONUS POINTS 5, 19: This map with location markers is not found in any of the textbook or class scripts
 #END SECTION 6
 
