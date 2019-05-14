@@ -165,7 +165,7 @@ def get_state(town_str):
 
 
 with open("MembershipEdited.csv", "r") as rolls:
-    with open("MembershipOutput.csv", "w") as output:
+    with open("MembershipLastEdit.csv", "w") as output:
         r = csv.reader(rolls)
         wr = csv.writer(output)
         
