@@ -530,7 +530,7 @@ dist <- M$Distance[M$Distance>0]; dist #get all the distances of the migrants
 mu <- mean(dist); mu #mean
 sigma <- sd(dist); sigma #standard deviation
 hist(dist, probability = TRUE, breaks = 100, xlab = "Distance", main = "Distances traveled from hometown for migrants") #make a histogram
-curve(dnorm(x, mu, sigma), add = TRUE, col = "blue") #evidently, the distances of migrants don't really follow a normal distribution neatly
+curve(dnorm(x, mu, sigma), add = TRUE, col = "blue") #evidently, the distances of migrants don't really follow a normal distribution neatly, so our distances of migrants probably doesn't follow a normal distribution
 #REQUIRED ANALYSIS 3^ this is a probability density function overlaid on a histogram
 
 #END SECTION 7
