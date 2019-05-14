@@ -1,0 +1,198 @@
+---
+title: "Final Project"
+author: "Michael Cheng and Ben Dreier"
+date: "5/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+library(geojson)
+```
+
+## Intro
+
+This Rmd file will present a few highlights of the full analysis present in the Final.R file.
+
+First, let's load the data file. Let M be the data file.
+
+```{r readin, echo=FALSE}
+M <- read.csv("MembershipEdited.csv"); head(M)
+```
+
+## SECTION 1: Hometown analysis with Contingency Table
+
+Is having a hometown that isn't Los Angeles correlated with being a Convert from another/no religion?
+My hypothesis: In theory, it could make sense because people who moved from further away towns might have joined the church in search of community, then converted religions
+While people originally from LA already had a community from growing up there; or another factor could dominate
+
+First, let's find out the number of people from LA and the number of converts
+
+```{r}
+
+HomeLA <- which(M$Hometown == "Los Angeles, CA") #People with hometowns LA
+length(HomeLA) #Los Angeles, CA has 1,232
+HomeNotLA <- which(M$Hometown != "Los Angeles, CA") #All people who were not from LA 
+length(HomeNotLA) #Not LA has 1,814
+ConvertsA <-which(M$Former.Church == "Convert") #All the converts
+length(ConvertsA) #427 converts
+NotConverts <-which(M$Former.Church != "Convert") #All the non-converts
+length(NotConverts) #2,619 non-converts
+
+# And put it in a data fram
+LA <- M$Hometown == "Los Angeles, CA"
+Converts <- M$Former.Church == "Convert"
+HomeR <- data.frame(LA, Converts) #make a dataframe with just the logical columns
+
+
+```
+
+We can run a chi squared test to see how dependent the variables of Being from LA and Being a Convert are:
+
+```{r}
+
+chisq.test(HomeR$LA,HomeR$Converts)
+
+```
+
+The p value is very small, so it is incredibly unlikely that the correlation between LA and Converts arose by chance. We can take this as evidence enough that there is a strong correlation between being from LA and being a Convert
+
+```{r echo=FALSE}
+slices <- c(424, 3, 808, 1818) #notice that the numbers are slightly different since I added back the residents who were excluded earlier
+lbls <- c("Convert Locals", "Convert Migrants", "Non-Convert Locals", "Non-Convert Migrants")
+pct <-  round(slices/sum(slices)*100, 2) 
+lbls <- paste(lbls, slices, pct) # add percents to labels 
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),
+    main="Converts, Non-Converts, Migrants, and Locals at the Church")
+```
+
+## SECTION 3: Comparing Baptism with Distance Travelled using Permutation Test
+
+Looking at the dataset, we see a lot of Baptist representation. Now, we want to figure out whether being a Baptist is correlated at all with Distance Traveled using a Permutation test.
+
+The following code uses a word-search algorithm to guess which churches in the dataset are Baptist churches. 
+
+```{r}
+
+Churches <- (M$Former.Church) #column of all individuals churches
+Denoms <- c("Baptist", "Methodist", "AME", "Episcopal", "CME", "Presbyterian", "Catholic") # Enumerate some words pointing to church denomination
+# Function to get which churches contain which denomination strings
+whichContain <- function(ch, dn){
+  denoms <- rep("", length(ch))
+  i <- 1
+  for(c in ch){
+    for(d in dn){
+      #Check if the church has the denomination
+      if( is.na(grepl(d, c)) ){break}
+      if( grepl(d, c) ){
+        denoms[i] = paste(denoms[i], d);
+      }
+    }
+    i <- i + 1
+  }
+  return(denoms)
+}
+WhichDenoms <- whichContain(Churches, Denoms)
+isBaptist <- WhichDenoms == " Baptist";  #true if an individual is Baptist
+
+sum(isBaptist)
+
+```
+
+We found 1185 Baptist churches. Out of only 3,046 individuals, this represents a big part of the population.
+
+Now, calculate the observed differences between Distance Travelled for Baptists vs Non-Baptists
+
+```{r}
+km <- M$Distance / 1000 #divide distance by 1000 to get distance in km
+mean(km) #mean distance for all Individuals is 1580.57 km
+median(km) #median distance for all Individuals is 2137 km
+
+#Calculate the observed Distance Traveled for Baptists and non-Baptists
+dBaptists <- sum((km) * (isBaptist == TRUE))/sum(isBaptist == TRUE) #average distance for Baptists is 2028.802 km
+dOthers <- sum((km) * (isBaptist == FALSE))/sum(isBaptist == FALSE) #average distance for non-Baptists is 1295.159 km
+observed <- dBaptists - dOthers; observed #on average, Baptists traveled 733.64 km farther than non-Baptists
+
+```
+
+Now we can perform a permutation test to determine if this difference could have arisen by chance.
+
+```{r}
+N <- 10000
+diffs <- numeric(N)
+for(i in 1:N){
+  Samp <- sample(isBaptist); Samp #permuted isBaptist column
+  dBaptists <- sum((km) * (Samp == TRUE))/sum(Samp == TRUE); dBaptists
+  dOthers <- sum((km) * (Samp == FALSE))/sum(Samp == FALSE)
+  diffs[i] = dBaptists - dOthers #as likely to be negative or positive
+}
+
+# The mean should hover near zero
+mean(diffs)
+```
+
+We can plot a histogram of observed differences from the permutation test to visually confirm that the differences are normally distributed with a mean of 0
+
+```{r echo=FALSE}
+hist(diffs, breaks = "FD", xlim = c(-500,900), main = "Histogram of Observed Differences", xlab = "Observed Differences")
+abline(v = observed, col = "red")
+```
+
+The red line, at the observed difference in the non-permuted data, is a statistical outlier. We can get its p-value:
+
+```{r}
+pvalue <- (sum(diffs >= observed)+1)/(N+1); pvalue
+```
+
+And see that there was about a 0.0001 chance of this difference occuring by chance. 
+
+We can conclude that, for whatever reason, Baptists at the People's Independent Church migrated from further distances than non-Baptists, on average 733.64 km further.
+
+## SECTION 6: Mapping the Hometown data
+
+For visual analysis and presentation, we can create a map using the hometown addresses in the data set. Location data was generated in R using the Google Maps API, but now we load data from a saved backup instead of fetching it all again. We also have access to a json file defining where and how to plot state outlines.
+
+```{r}
+locs_file <- read.csv("locations2.csv")
+states <- geojsonio::geojson_read("us-states.json", what="sp")
+```
+
+Now we count the number of times each state enumerated in the states object occurs in the dataset; this is what we will plot on our heatmap.
+
+```{r}
+counts = {}
+for(i in 1:length(states$name)){
+  curr_state <- toString(states$name[i])
+  state_count <- length(M$State[M$State == curr_state])
+  counts = c(counts, state_count)
+}
+
+# Put these counts in the states object used for visualization
+states$count <- counts
+```
+
+After deciding how to delineate color bins and creating a palette, we can use leaflet to map how frequently each state appears.
+
+```{r echo=FALSE}
+states$count <- counts
+
+bins <- c(0, 10^seq(0, 3.5, 0.5))
+pal <- colorBin("YlOrRd", domain = states$count, bins = floor(bins))
+
+
+m <- leaflet(states)
+m <- addTiles(m)
+m <- addPolygons(m, fillColor = ~pal(counts), weight=1, color="white", fillOpacity = 0.7)
+m <- addLegend(m, "bottomright", pal=pal, values=counts)
+m 
+```
+
+Then, using the individual location data gathered earlier, we plot every member on the map.
+
+```{r echo=FALSE}
+addCircleMarkers(m, lng=locs_file$lon, lat=locs_file$lat, label=M$Former.Church, radius=1)
+```
+
+Darker dots represent multiple individuals who live in the same town.
