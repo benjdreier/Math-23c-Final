@@ -163,7 +163,10 @@ def get_state(town_str):
 
     
 
-
+# Note: This reads information from MembershipEdited and outputs it to
+# some arbitrary file MembershipLastEdit. We merged these changes into the
+# MembershipEdited document itself, so while this code should still work, the
+# outputted file should be identical to the current MembershipEdited.csv
 with open("MembershipEdited.csv", "r") as rolls:
     with open("MembershipLastEdit.csv", "w") as output:
         r = csv.reader(rolls)
